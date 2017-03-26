@@ -1,5 +1,5 @@
+from django.core.validators import MinLengthValidator
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator, MinLengthValidator
 
 oscar_categories = ['Best Film', 'Best Film Editing', 'Best Scenario', 'Best Adapter Screenplay', 'Best Original Song']
 oscar_categories_tuple = [(f.replace(' ', '_'), f) for f in oscar_categories]

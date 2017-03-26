@@ -1,6 +1,6 @@
+from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django.core.urlresolvers import reverse, resolve
 
 from movie_database.models import Genre
 
@@ -34,7 +34,7 @@ class TestGenreViewSet(APITestCase):
     def test_edit_new_valid_genre(self):
         g = Genre(name='Comedy')
         g.save()
-        url = reverse('genre-detail', kwargs={'pk':g.id})
+        url = reverse('genre-detail', kwargs={'pk': g.id})
         data = {'name': 'Horror'}
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -44,8 +44,7 @@ class TestGenreViewSet(APITestCase):
     def test_delete_genre(self):
         g = Genre(name='Horror')
         g.save()
-        url = reverse('genre-detail', kwargs={'pk':g.id})
+        url = reverse('genre-detail', kwargs={'pk': g.id})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Genre.objects.count(), 0)
-

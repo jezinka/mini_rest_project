@@ -1,6 +1,4 @@
-from rest_framework import viewsets, renderers
-from rest_framework.decorators import detail_route
-from rest_framework.response import Response
+from rest_framework import viewsets
 
 from movie_database.models import Genre
 from movie_database.serializers import GenreSerializer
