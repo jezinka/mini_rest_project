@@ -13,6 +13,9 @@ class OscarAward(models.Model):
     category = models.CharField(max_length=20, choices=oscar_categories_tuple, null=False)
     year = models.IntegerField(validators=[MinValueValidator(1929), MaxValueValidator(2016)])
 
+    class Meta:
+        unique_together = ('category', 'year')
+
 
 class Actor(models.Model):
     created = models.DateTimeField(auto_now_add=True)

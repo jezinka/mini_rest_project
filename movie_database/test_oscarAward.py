@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db.utils import IntegrityError
 from django.test import TestCase
 
 from movie_database.models import OscarAward, oscar_categories_tuple
@@ -96,3 +97,11 @@ class OscarAwardTestCase(TestCase):
 
         oscarAward.delete()
         self.assertEqual(0, OscarAward.objects.count())
+
+    def test_unique_together_for_year_and_category(self):
+        oscarAward = OscarAward(year=1979, category=oscar_categories_tuple[0][0])
+        oscarAward.save()
+
+        oscarAward2 = OscarAward(year=1979, category=oscar_categories_tuple[0][0])
+        with self.assertRaises(IntegrityError):
+            oscarAward2.save()
