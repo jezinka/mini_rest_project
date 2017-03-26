@@ -8,7 +8,8 @@ from movie_database.models import Genre
 class TestGenreViewSet(APITestCase):
     def test_detail_view_with_a_non_exist_genre(self):
         # should return a 404 not found.
-        response = self.client.get('/genre/4/')
+        url = reverse('genre-detail', kwargs={'pk': 123})
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
     def test_list_view_for_empty_genres(self):
@@ -31,6 +32,15 @@ class TestGenreViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Genre.objects.count(), 0)
 
+    def test_detail_view_with_a_exist_genre(self):
+        # should return a 200 OK
+        g = Genre(name='Horror')
+        g.save()
+
+        url = reverse('genre-detail', kwargs={'pk': g.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
     def test_edit_new_valid_genre(self):
         g = Genre(name='Comedy')
         g.save()
@@ -48,3 +58,10 @@ class TestGenreViewSet(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Genre.objects.count(), 0)
+
+    def test_list_view_for_genres(self):
+        # should return 200 OK
+        g = Genre(name='Horror')
+        g.save()
+        response = self.client.get('/genres/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
