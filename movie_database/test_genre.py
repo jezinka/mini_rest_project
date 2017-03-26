@@ -45,7 +45,7 @@ class GenreTestCase(TestCase):
         with self.assertRaises(ValidationError):
             genre.full_clean()
 
-    def test_updating_name_no_validation_throw(self):
+    def test_updating_name_none_should_validation_error_throw(self):
         genre = Genre(name='Thriller')
         genre.full_clean()
         genre.save()
