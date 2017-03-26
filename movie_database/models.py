@@ -16,6 +16,9 @@ class OscarAward(models.Model):
     class Meta:
         unique_together = ('category', 'year')
 
+    def __str__(self):
+        return '%s %d' % (self.category, self.year)
+
 
 class Actor(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -25,6 +28,9 @@ class Actor(models.Model):
     class Meta:
         ordering = ('surname', 'name')
 
+    def __str__(self):
+        return '%s %s' % (self.name, self.surname)
+
 
 class Director(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -33,3 +39,21 @@ class Director(models.Model):
 
     class Meta:
         ordering = ('surname', 'name')
+
+    def __str__(self):
+        return '%s %s' % (self.name, self.surname)
+
+
+class Movie(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=100, validators=[MinLengthValidator(1)])
+    director = models.ForeignKey(Director, related_name='directs', null=False)
+    actor = models.ManyToManyField(Actor, related_name='plays')
+    oscar_award = models.OneToOneField(OscarAward, on_delete=models.SET_NULL, null=True, blank=True)
+    animated = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ('title',)
+
+    def __str__(self):
+        return '%s' % (self.title)
