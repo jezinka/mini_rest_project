@@ -12,3 +12,12 @@ class Genre(models.Model):
 class OscarAward(models.Model):
     category = models.CharField(max_length=20, choices=oscar_categories_tuple, null=False)
     year = models.IntegerField(validators=[MinValueValidator(1929), MaxValueValidator(2016)])
+
+
+class Actor(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=20, blank=False)
+    surname = models.CharField(max_length=40, blank=False)
+
+    class Meta:
+        ordering = ('surname', 'name')

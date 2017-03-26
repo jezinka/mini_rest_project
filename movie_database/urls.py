@@ -7,6 +7,7 @@ from movie_database import views
 router = DefaultRouter()
 router.register(r'genres', views.GenreViewSet)
 router.register(r'oscarAwards', views.OscarAwardViewSet)
+router.register(r'actors', views.ActorViewSet)
 
 # The API URLs are now determined automatically by the router.
 # Additionally, we include the login URLs for the browsable API.
