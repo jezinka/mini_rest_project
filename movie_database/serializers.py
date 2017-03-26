@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from movie_database.models import Genre, OscarAward, Actor, Director
+from movie_database.models import Genre, OscarAward, Actor, Director, Movie
 
 
 class GenreSerializer(serializers.HyperlinkedModelSerializer):
@@ -25,3 +25,9 @@ class DirectorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Director
         fields = ('url', 'id', 'name', 'surname', 'created')
+
+
+class MovieSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Movie
+        fields = ('url', 'id', 'title', 'director', 'actor', 'oscar_award', 'animated')
