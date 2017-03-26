@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from movie_database.models import Genre, OscarAward, Actor
-from movie_database.serializers import GenreSerializer, OscarAwardSerializer, ActorSerializer
+from movie_database.models import Genre, OscarAward, Actor, Director
+from movie_database.serializers import GenreSerializer, OscarAwardSerializer, ActorSerializer, DirectorSerializer
 
 
 class GenreViewSet(viewsets.ModelViewSet):
@@ -38,6 +38,19 @@ class ActorViewSet(viewsets.ModelViewSet):
 
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+class DirectorViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+    """
+
+    queryset = Director.objects.all()
+    serializer_class = DirectorSerializer
 
     def perform_create(self, serializer):
         serializer.save()

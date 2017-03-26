@@ -21,3 +21,12 @@ class Actor(models.Model):
 
     class Meta:
         ordering = ('surname', 'name')
+
+
+class Director(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=20, blank=False)
+    surname = models.CharField(max_length=40, blank=False)
+
+    class Meta:
+        ordering = ('surname', 'name')
