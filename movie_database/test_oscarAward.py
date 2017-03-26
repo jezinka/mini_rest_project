@@ -83,3 +83,16 @@ class OscarAwardTestCase(TestCase):
         self.assertEqual(1, oscarAward.id)
         self.assertEqual(1979, oscarAward.year)
         self.assertEqual('Best_Film_Editing', oscarAward.category)
+
+    def test_deleting_none_existing_oscarAward_should_error_throw(self):
+        oscarAward = OscarAward(year=1979, category=oscar_categories_tuple[0][0])
+
+        with self.assertRaises(AssertionError):
+            oscarAward.delete()
+
+    def test_deleting_existing_oscarAward_should_pass(self):
+        oscarAward = OscarAward(year=1979, category=oscar_categories_tuple[0][0])
+        oscarAward.save()
+
+        oscarAward.delete()
+        self.assertEqual(0, OscarAward.objects.count())

@@ -53,3 +53,16 @@ class GenreTestCase(TestCase):
         genre.name = None
         with self.assertRaises(ValidationError):
             genre.full_clean()
+
+    def test_deleting_none_existing_genre_should_error_throw(self):
+        genre = Genre(name='Comedy')
+
+        with self.assertRaises(AssertionError):
+            genre.delete()
+
+    def test_deleting_existing_genre_should_pass(self):
+        genre = Genre(name='Thriller')
+        genre.save()
+
+        genre.delete()
+        self.assertEqual(0, Genre.objects.count())
