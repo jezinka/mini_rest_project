@@ -25,6 +25,10 @@ class TestDirectorViewSet(APITestCase):
         self.assertEqual(Director.objects.count(), 1)
         self.assertEqual(Director.objects.get().name, 'steven')
         self.assertEqual(Director.objects.get().surname, 'spilberg')
+        self.assertEqual(response.data['id'], 1)
+        self.assertEqual(response.data['name'], 'steven')
+        self.assertEqual(response.data['surname'], 'spilberg')
+
 
     def test_create_new_empty_name_director_should_throw_400(self):
         url = reverse('director-list')
@@ -63,16 +67,24 @@ class TestDirectorViewSet(APITestCase):
         self.assertEqual(Director.objects.get().name, 'ennio')
         self.assertEqual(Director.objects.get().surname, 'spilberg')
 
+        self.assertEqual(response.data['id'], 1)
+        self.assertEqual(response.data['name'], 'ennio')
+        self.assertEqual(response.data['surname'], 'spilberg')
+
     def test_edit_surname_valid_director(self):
         g = Director(name='steven', surname='spilberg')
         g.save()
         url = reverse('director-detail', kwargs={'pk': g.id})
-        data = {'surname': 'spilberg'}
+        data = {'surname': 'moricone'}
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Director.objects.count(), 1)
-        self.assertEqual(Director.objects.get().surname, 'spilberg')
+        self.assertEqual(Director.objects.get().surname, 'moricone')
         self.assertEqual(Director.objects.get().name, 'steven')
+
+        self.assertEqual(response.data['id'], 1)
+        self.assertEqual(response.data['name'], 'steven')
+        self.assertEqual(response.data['surname'], 'moricone')
 
     def test_delete_director(self):
         g = Director(name='steven', surname='spilberg')
