@@ -28,10 +28,9 @@ class TestMovieViewSet(APITestCase):
 
     def test_create_new_valid_movie(self):
         url = reverse('movie-list')
-        data = {'title': 'steven', 'director': 1, 'actor': [1, 2]}
+        data = {'title': 'steven', 'director': 1}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Movie.objects.count(), 1)
         self.assertEqual(Movie.objects.get().title, 'steven')
         self.assertEqual(Movie.objects.get().director, Director.objects.get(pk=1))
-        self.assertQuerysetEqual(Movie.objects.get().actor.all(), [repr(r) for r in Actor.objects.all()])
