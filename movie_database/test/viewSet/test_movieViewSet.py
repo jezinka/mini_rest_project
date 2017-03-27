@@ -34,3 +34,55 @@ class TestMovieViewSet(APITestCase):
         self.assertEqual(Movie.objects.count(), 1)
         self.assertEqual(Movie.objects.get().title, 'steven')
         self.assertEqual(Movie.objects.get().director, Director.objects.get(pk=1))
+
+    def test_detail_view_with_a_after_create_movie(self):
+        url = reverse('movie-list')
+        data = {'title': 'steven', 'director': 1}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        url = reverse('movie-detail', kwargs={'pk': 1})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_update_title_with_a_after_create_movie(self):
+        url = reverse('movie-list')
+        data = {'title': 'steven', 'director': 1}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        url = reverse('movie-detail', kwargs={'pk': 1})
+        data = {'title': 'ennio'}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], 'ennio')
+
+    def test_delete_movie(self):
+        url = reverse('movie-list')
+        data = {'title': 'steven', 'director': 1}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Movie.objects.count(), 1)
+        url = reverse('movie-detail', kwargs={'pk': 1})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Movie.objects.count(), 0)
+
+    def test_create_new_valid_movie_with_actors(self):
+        url = reverse('movie-list')
+        data = {'title': 'steven', 'director': 1, 'actor': [1, 2]}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Movie.objects.count(), 1)
+        self.assertEqual(Movie.objects.get().title, 'steven')
+        self.assertEqual(Movie.objects.get().director, Director.objects.get(pk=1))
+        self.assertQuerysetEqual(Movie.objects.get().actor.all(), [repr(r) for r in Actor.objects.all()])
+
+    def test_create_new_animated_movie(self):
+        url = reverse('movie-list')
+        data = {'title': 'steven', 'director': 1, 'animated': True}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Movie.objects.count(), 1)
+        self.assertEqual(Movie.objects.get().director, Director.objects.get(pk=1))
+        self.assertEqual(response.data['animated'], True)
