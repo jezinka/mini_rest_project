@@ -39,6 +39,14 @@ class ActorTestCase(TestCase):
         self.assertEqual('doe', actor.surname)
         self.assertIsNotNone(actor.created)
 
+    def test_saving_actor_unique_error_throw(self):
+        actor = Actor(name='jane', surname='doe')
+        actor.full_clean()
+        actor.save()
+        actor2 = Actor(name='jane', surname='doe')
+        with self.assertRaises(ValidationError):
+            actor2.full_clean()
+
     def test_updating_name_no_error_throw(self):
         actor = Actor(name='john', surname='doe')
         actor.full_clean()

@@ -6,7 +6,7 @@ oscar_categories_tuple = [(f.replace(' ', '_'), f) for f in oscar_categories]
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=10, validators=[MinLengthValidator(1)])
+    name = models.CharField(max_length=10, unique=True, validators=[MinLengthValidator(1)])
 
     def __str__(self):
         return '%s' % (self.name)
@@ -30,6 +30,7 @@ class Actor(models.Model):
 
     class Meta:
         ordering = ('surname', 'name')
+        unique_together = ('surname', 'name')
 
     def __str__(self):
         return '%s %s' % (self.name, self.surname)
@@ -43,6 +44,7 @@ class Director(models.Model):
 
     class Meta:
         ordering = ('surname', 'name')
+        unique_together = ('surname', 'name')
 
     def __str__(self):
         return '%s %s' % (self.name, self.surname)
@@ -59,6 +61,7 @@ class Movie(models.Model):
 
     class Meta:
         ordering = ('title',)
+        unique_together = ('title', 'director')
 
     def __str__(self):
         return '%s' % (self.title)

@@ -40,6 +40,14 @@ class DirectorTestCase(TestCase):
         self.assertEqual('spilberg', director.surname)
         self.assertIsNotNone(director.created)
 
+    def test_saving_director_unique_error_throw(self):
+        director = Director(name='jane', surname='doe')
+        director.full_clean()
+        director.save()
+        director2 = Director(name='jane', surname='doe')
+        with self.assertRaises(ValidationError):
+            director2.full_clean()
+
     def test_updating_name_no_error_throw(self):
         director = Director(name='ennio', surname='spilberg')
         director.full_clean()
