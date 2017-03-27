@@ -48,6 +48,9 @@ class TestDirectorViewSet(APITestCase):
         url = reverse('director-detail', kwargs={'pk': g.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['id'], 1)
+        self.assertEqual(response.data['name'], 'steven')
+        self.assertEqual(response.data['surname'], 'spilberg')
 
     def test_edit_name_valid_director(self):
         g = Director(name='steven', surname='spilberg')
