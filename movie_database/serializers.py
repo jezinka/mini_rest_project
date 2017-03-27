@@ -22,9 +22,15 @@ class ActorSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class DirectorSerializer(serializers.HyperlinkedModelSerializer):
+    directs = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='movie-detail'
+    )
+
     class Meta:
         model = Director
-        fields = ('url', 'id', 'name', 'surname', 'created')
+        fields = ('url', 'id', 'name', 'surname', 'created', 'directs')
 
 
 class MovieSerializer(serializers.HyperlinkedModelSerializer):

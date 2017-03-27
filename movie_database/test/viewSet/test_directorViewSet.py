@@ -2,10 +2,11 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from movie_database.models import Director
+from movie_database.models import Director, Actor, Movie
 
 
 class TestDirectorViewSet(APITestCase):
+
     def test_detail_view_with_a_non_exist_director(self):
         # should return a 404 not found.
         url = reverse('director-detail', kwargs={'pk': 123})
@@ -97,7 +98,22 @@ class TestDirectorViewSet(APITestCase):
     def test_list_view_for_directors(self):
         # should return 200 OK
         g = Director(name='steven', surname='spilberg')
-        g = Director(name='steven', surname='spilberg')
         g.save()
         response = self.client.get('/directors/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_directs_related_property_from_movie(self):
+        Director(name='steven', surname='spilberg').save()
+        Director(name='robert', surname='zucker').save()
+        Actor(name='Leonardo', surname='diCaprio').save()
+        Movie(title='Logan', director=Director.objects.get(pk=1)).save()
+        Movie(title='Top Gun', director=Director.objects.get(pk=2)).save()
+
+        url = reverse('director-detail', kwargs={'pk': 1})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(response.data['id'], 1)
+        self.assertEqual(response.data['name'], 'steven')
+        self.assertEqual(response.data['surname'], 'spilberg')
+        self.assertEqual(len(response.data['directs']), 1)
