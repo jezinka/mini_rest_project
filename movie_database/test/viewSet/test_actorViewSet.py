@@ -112,3 +112,19 @@ class TestActorViewSet(APITestCase):
         self.assertEqual(response.data['name'], 'Bill')
         self.assertEqual(response.data['surname'], 'Murray')
         self.assertEqual(len(response.data['plays']), 1)
+
+    def test_delete_actor_not_deletes_movies(self):
+        Director(name='steven', surname='spilberg').save()
+        m = Movie(title='Logan', director=Director.objects.get(pk=1))
+        m.save()
+
+        a = Actor(name='Bill', surname='Murray')
+        a.save()
+        m.actor.add(a)
+        m.save()
+
+        url = reverse('actor-detail', kwargs={'pk': a.id})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Actor.objects.count(), 0)
+        self.assertEqual(Movie.objects.count(), 1)

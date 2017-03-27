@@ -117,3 +117,14 @@ class TestDirectorViewSet(APITestCase):
         self.assertEqual(response.data['name'], 'steven')
         self.assertEqual(response.data['surname'], 'spilberg')
         self.assertEqual(len(response.data['directs']), 1)
+
+    def test_delete_director_deletes_movies(self):
+        g = Director(name='steven', surname='spilberg')
+        g.save()
+        Movie(title='Logan', director=Director.objects.get(pk=1)).save()
+
+        url = reverse('director-detail', kwargs={'pk': g.id})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Director.objects.count(), 0)
+        self.assertEqual(Movie.objects.count(), 0)
