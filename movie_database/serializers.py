@@ -4,9 +4,15 @@ from movie_database.models import Genre, OscarAward, Actor, Director, Movie
 
 
 class GenreSerializer(serializers.HyperlinkedModelSerializer):
+    movie_genre = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='movie-detail'
+    )
+
     class Meta:
         model = Genre
-        fields = ('url', 'id', 'name')
+        fields = ('url', 'id', 'name', 'movie_genre')
 
 
 class OscarAwardSerializer(serializers.HyperlinkedModelSerializer):
