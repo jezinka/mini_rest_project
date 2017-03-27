@@ -43,7 +43,9 @@ class MovieSerializer(serializers.HyperlinkedModelSerializer):
     director = serializers.PrimaryKeyRelatedField(queryset=Director.objects.all(), many=False, read_only=False)
     actor = serializers.PrimaryKeyRelatedField(default=[], queryset=Actor.objects.all(), many=True, read_only=False,
                                                allow_empty=True)
+    genre = serializers.PrimaryKeyRelatedField(default=[], queryset=Genre.objects.all(), many=True, read_only=False,
+                                               allow_empty=True)
 
     class Meta:
         model = Movie
-        fields = ('url', 'id', 'title', 'director', 'actor', 'oscar_award', 'animated')
+        fields = ('url', 'id', 'title', 'genre', 'director', 'actor', 'oscar_award', 'animated')
