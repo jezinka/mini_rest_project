@@ -28,6 +28,9 @@ class DirectorSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class MovieSerializer(serializers.HyperlinkedModelSerializer):
+    director = serializers.PrimaryKeyRelatedField(queryset=Director.objects.all(), many=False, read_only=False)
+    actor = serializers.PrimaryKeyRelatedField(queryset=Actor.objects.all(), many=True, read_only=False)
+
     class Meta:
         model = Movie
         fields = ('url', 'id', 'title', 'director', 'actor', 'oscar_award', 'animated')
