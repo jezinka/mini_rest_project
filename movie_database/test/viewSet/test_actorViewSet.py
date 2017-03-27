@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from movie_database.models import Actor
+from movie_database.models import Actor, Director, Movie
 
 
 class TestActorViewSet(APITestCase):
@@ -85,3 +85,30 @@ class TestActorViewSet(APITestCase):
         g.save()
         response = self.client.get('/actors/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_directs_related_property_from_movie(self):
+        Director(name='steven', surname='spilberg').save()
+
+        a1 = Actor(name='Leonardo', surname='diCaprio')
+        a1.save()
+        a2 = Actor(name='Bill', surname='Murray')
+        a2.save()
+
+        m1 = Movie(title='Logan', director=Director.objects.get(pk=1))
+        m1.save()
+        m1.actor.add(a1)
+        m1.save()
+
+        m2 = Movie(title='Top Gun', director=Director.objects.get(pk=1))
+        m2.save()
+        m1.actor.add(a2)
+        m1.save()
+
+        url = reverse('actor-detail', kwargs={'pk': 2})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(response.data['id'], 2)
+        self.assertEqual(response.data['name'], 'Bill')
+        self.assertEqual(response.data['surname'], 'Murray')
+        self.assertEqual(len(response.data['plays']), 1)
