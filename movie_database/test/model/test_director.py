@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from movie_database.models import Director
+from movie_database.models import Director, Movie
 
 
 class DirectorTestCase(TestCase):
@@ -121,3 +121,13 @@ class DirectorTestCase(TestCase):
 
         with self.assertRaises(AssertionError):
             director.delete()
+
+    def test_deleting_existing_director_should_remove_movie(self):
+        director = Director(name='steven', surname='spilberg')
+        director.save()
+        movie = Movie(title='IT Crowd', director=Director.objects.get(pk=1))
+        movie.save()
+
+        director.delete()
+        self.assertEqual(0, Director.objects.count())
+        self.assertEqual(0, Movie.objects.count())
