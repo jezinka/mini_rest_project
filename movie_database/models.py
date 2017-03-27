@@ -21,6 +21,7 @@ class OscarAward(models.Model):
 
 
 class Actor(models.Model):
+    # should be inheritance from Person
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=20, blank=False)
     surname = models.CharField(max_length=40, blank=False)
@@ -33,6 +34,7 @@ class Actor(models.Model):
 
 
 class Director(models.Model):
+    # should be inheritance from Person
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=20, blank=False)
     surname = models.CharField(max_length=40, blank=False)
